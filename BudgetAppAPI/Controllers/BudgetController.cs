@@ -1,6 +1,6 @@
 ﻿using BudgetAppAPI.DTOs.BudgetTransactions;
 using BudgetAppAPI.Interfaces.Services;
-using Microsoft.AspNetCore.Authorization;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetAppAPI.Controllers
@@ -10,14 +10,16 @@ namespace BudgetAppAPI.Controllers
     public class BudgetController : Controller
     {
         private readonly IBudgetService<BudgetTransactionForList, BudgetDataDto, AddBudgetTransaction> _budgetService;
+        private readonly IValidator<AddBudgetTransaction> _addBudgetTransactionValidator;
 
-        public BudgetController(IBudgetService<BudgetTransactionForList, BudgetDataDto, AddBudgetTransaction> budgetService)
+        public BudgetController(IBudgetService<BudgetTransactionForList, BudgetDataDto, AddBudgetTransaction> budgetService,
+            IValidator<AddBudgetTransaction> addBudgetTransactionValidator)
         {
             _budgetService = budgetService;
+            _addBudgetTransactionValidator = addBudgetTransactionValidator;
         }
 
         [HttpGet("getBudgetData")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetBudgetData()
         {
             var result = await _budgetService.GetBudgetData();
@@ -26,7 +28,6 @@ namespace BudgetAppAPI.Controllers
         }
 
         [HttpGet("incomes")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetIncomes()
         {
             var result = await _budgetService.GetIncomes();
@@ -36,7 +37,6 @@ namespace BudgetAppAPI.Controllers
 
 
         [HttpGet("expenses")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetExpenses()
         {
             var result = await _budgetService.GetExpenses();
@@ -46,7 +46,6 @@ namespace BudgetAppAPI.Controllers
 
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<BudgetTransactionForList>> GetTransactionById([FromRoute] Guid id)
         {
             var result = await _budgetService.GetTransactionById(id);
@@ -55,16 +54,21 @@ namespace BudgetAppAPI.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> AddTransaction([FromBody] AddBudgetTransaction transaction)
         {
+            var validationResult = await _addBudgetTransactionValidator.ValidateAsync(transaction);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var result = await _budgetService.AddTransaction(transaction);
 
             return CreatedAtAction(nameof(GetTransactionById), new { id = result.Id }, result);
         }
 
         [HttpDelete("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteTransaction([FromRoute] Guid id)
         {
             var result = await _budgetService.DeleteTransaction(id);

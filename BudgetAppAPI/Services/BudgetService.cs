@@ -36,14 +36,16 @@ namespace BudgetAppAPI.Services
             data.TotalIncomes = totalIncomes;
             data.AvailableBudget = totalIncomes - totalExpenses;
 
-            var isIncomesZero = totalIncomes == 0;
+            var isIncomesGreaterThanZero = totalIncomes >= 0;
 
             foreach (var exp in data.Expenses)
             {
-                exp.Percentage = isIncomesZero ? 0 : Math.Round(exp.Amount / totalIncomes, 2, MidpointRounding.AwayFromZero);
+                exp.Percentage = isIncomesGreaterThanZero ?
+                    Math.Round(exp.Amount / totalIncomes, 2, MidpointRounding.AwayFromZero) : 0;
             }
 
-            data.TotalExpensesPercentage = isIncomesZero ? 0 : Math.Round(data.TotalExpenses / totalIncomes, 2, MidpointRounding.AwayFromZero);
+            data.TotalExpensesPercentage = isIncomesGreaterThanZero ?
+                Math.Round(totalExpenses / totalIncomes, 2, MidpointRounding.AwayFromZero) : 0;
 
             return data;
         }

@@ -34,31 +34,47 @@ namespace BudgetAppAPI.Middlewares
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
+            string title = "Error";
+            string detail = "Ocurrió un error inesperado";
             var statusCode = HttpStatusCode.InternalServerError;
             var errorMessage = exception.Message;
-            string title = "Ha ocurrido un error inesperado";
+            object? errors = null;
 
             switch (exception)
             {
                 case UnauthorizedAccessException:
                     statusCode = HttpStatusCode.Unauthorized;
                     title = "Acceso no autorizado";
+                    detail = exception.Message;
+                    break;
+                case ValidationException validationException:
+                    statusCode = HttpStatusCode.BadRequest;
+                    title = "Formato incorrecto";
+                    detail = "El(los) valor(es) ingresado(s) tiene(n) el formato incorrecto";
+                    errors = validationException.Errors
+                        .GroupBy(e => e.PropertyName)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Select(e => e.ErrorMessage).ToArray()
+                        );
                     break;
                 case BadHttpRequestException:
                 case ArgumentNullException:
                 case ArgumentException:
-                case ValidationException:
                 case ApplicationException:
                     statusCode = HttpStatusCode.BadRequest;
                     title = "Solicitud invalida";
+                    detail = exception.Message;
                     break;
                 case NotFoundException:
                     statusCode = HttpStatusCode.NotFound;
+                    detail = exception.Message;
                     break;
                 case DbUpdateConcurrencyException:
                 case ConflictException:
                     statusCode = HttpStatusCode.Conflict;
                     title = "Conflicto de datos";
+                    detail = exception.Message;
                     break;
                 default:
                     break;
@@ -68,14 +84,13 @@ namespace BudgetAppAPI.Middlewares
 
             var errorResponse = new
             {
-                Success = false,
-                Message = errorMessage,
-                StatusCode = (int)statusCode,
-                ErrorDetails = exception.StackTrace,
-                Detail = exception.Message
+                Title = title,
+                Status = (int)statusCode,
+                Detail = detail,
+                Errors = errors
             };
 
-            _logger.LogError(exception, errorResponse.Message);
+            _logger.LogError(exception, exception.Message);
             await context.Response.WriteAsJsonAsync(errorResponse);
         }
     }

@@ -1,0 +1,61 @@
+<form
+  class="row gx-2 mx-5"
+  [formGroup]="transactionForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="col-auto">
+    <select
+      formControlName="type"
+      id="type"
+      class="form-select bg-success text-light border-secondary"
+      [class.is-invalid]="isFieldInvalid('type')"
+      >
+      <option [value]="transactionTypes.INCOME">+</option>
+      <option [value]="transactionTypes.EXPENSE">-</option>
+    </select>
+    <p class="invalid-feedback" *ngIf="isFieldInvalid('type')">
+      {{ getErrorMessage("type") }}
+    </p>
+  </div>
+  <div class="col">
+    <input
+      type="text"
+      placeholder="Descripción"
+      class="form-control border-success bg-transparent text-white-50"
+      [class.is-invalid]="isFieldInvalid('description')"
+      formControlName="description"
+      id="description"
+      autocomplete="off"
+    />
+    <p class="invalid-feedback" *ngIf="isFieldInvalid('description')">
+      {{ getErrorMessage("description") }}
+    </p>
+  </div>
+  <div class="col-auto">
+    <input
+      type="number"
+      placeholder="Valor"
+      [class.is-invalid]="isFieldInvalid('amount')"
+      class="form-control border-success bg-transparent text-white-50"
+      formControlName="amount"
+      id="amount"
+    />
+    <p class="invalid-feedback" *ngIf="isFieldInvalid('amount')">
+      {{ getErrorMessage("amount") }}
+    </p>
+  </div>
+  <div class="col-auto">
+    <button
+      type="submit"
+      class="btn btn-success d-flex flex-column justify-content-center h-100"
+      [disabled]="transactionForm.invalid"
+      style="max-height: 38px;"
+    >
+      <img
+        src="circle_check_white.svg"
+        alt="Agregar"
+        style="width: 20px; height: 20px"
+      />
+    </button>
+  </div>
+</form>

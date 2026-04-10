@@ -3,11 +3,13 @@ using BudgetAppAPI.Contexts;
 using BudgetAppAPI.DTOs.BudgetTransactions;
 using BudgetAppAPI.Interfaces.Repositories;
 using BudgetAppAPI.Interfaces.Services;
+using BudgetAppAPI.Middlewares;
 using BudgetAppAPI.Models;
 using BudgetAppAPI.Repositories;
 using BudgetAppAPI.Services;
+using BudgetAppAPI.Validators.BudgetTransactions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using BudgetAppAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,8 @@ builder.Services.AddDbContext<BudgetContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"));
 });
 
+builder.Services.AddScoped<IValidator<AddBudgetTransaction>, AddBudgetTransactionValidator>();
+
 //Services
 
 builder.Services.AddScoped<IBudgetService<BudgetTransactionForList, BudgetDataDto, AddBudgetTransaction>, BudgetService>();
@@ -37,6 +41,14 @@ builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<BudgetTransactionMappingProfile>();
 });
+
+builder.Services.AddCors(x => x.AddPolicy("CorsPolicy", options =>
+{
+    options.WithOrigins(builder.Configuration["AppSettings:Audience"])
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+}));
 
 var app = builder.Build();
 
@@ -54,5 +66,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("CorsPolicy");
 
 app.Run();

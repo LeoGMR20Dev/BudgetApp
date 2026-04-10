@@ -1,0 +1,41 @@
+<section>
+  <h2 class="text-center text-primary fw-semibold">Ingresos</h2>
+
+  @if (budgetData$ | async; as budget) {
+    <ul
+      class="list-group rounded-3 mt-3"
+      [ngClass]="
+        (budget?.incomes?.length ?? 0) > 0
+          ? 'border border-secondary'
+          : 'border-0'
+      "
+    >
+      @for (income of budget?.incomes; track income.id) {
+        <li
+          class="list-group-item bg-transparent px-3 py-2 d-flex flex-row justify-content-between align-items-center border-0"
+          [ngClass]="$last ? 'border-0' : 'border-bottom border-secondary'"
+        >
+          <p class="flex-grow-1 mb-0 text-white-50 fs-6">
+            {{ income.description }}
+          </p>
+          <p class="text-success mb-0 mx-3 fs-6">
+            {{ income.amount | currency: "USD" }}
+          </p>
+          <button class="btn btn-sm btn-danger d-flex">
+            <img
+              src="circle_delete_white.svg"
+              alt="Eliminar"
+              style="width: 20px; height: 20px"
+            />
+          </button>
+        </li>
+      } @empty {
+        <p class="fw-semibold text-center">No se tienen ingresos registrados</p>
+      }
+    </ul>
+  } @else {
+    <p class="fw-semibold text-center">
+      No se pudo obtener los registros de ingresos
+    </p>
+  }
+</section>

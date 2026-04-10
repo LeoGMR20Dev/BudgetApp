@@ -1,0 +1,26 @@
+<section class="row border border-primary rounded-2 p-3">
+  @if (budgetData$ | async; as budget) {
+    <div class="col-12">
+      <h2 class="text-center fw-semibold">Presupuesto Disponible:</h2>
+      <p class="text-center text-warning fw-bold fs-1">
+        {{ budget.availableBudget | currency: "USD" }}
+      </p>
+    </div>
+
+    <div class="col-6">
+      <h3 class="text-center text-white-50 fw-normal fs-4">Ingresos</h3>
+      <p class="text-center text-success fw-bold fs-4">
+        {{ budget.totalIncomes | currency: "USD" }}
+      </p>
+    </div>
+    <div class="col-6">
+      <h3 class="text-center text-white-50 fw-normal fs-4">Egresos</h3>
+      <p class="text-center text-danger fw-bold fs-4">
+        {{ budget.totalExpenses | currency: "USD" }}
+        <span class="bg-success rounded-2 text-white px-2 py-1">{{
+          budget.totalExpensesPercentage | percent: "1.2-2"
+        }}</span>
+      </p>
+    </div>
+  }
+</section>
