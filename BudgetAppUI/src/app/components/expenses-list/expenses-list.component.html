@@ -24,7 +24,10 @@
               expense.percentage | percent: "1.2-2"
             }}</span>
           </p>
-          <button class="btn btn-sm btn-danger d-flex">
+          <button
+            class="btn btn-sm btn-danger d-flex"
+            (click)="this.openDeleteModal(expense)"
+          >
             <img
               src="circle_delete_white.svg"
               alt="Eliminar"
@@ -42,3 +45,16 @@
     </p>
   }
 </section>
+
+<swal
+  #deleteExpense
+  title="Eliminar transacción"
+  text="¿Está seguro de eliminar esta transacción?"
+  icon="warning"
+  confirmButtonText="Si"
+  cancelButtonText="No"
+  [showCloseButton]="true"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="this.confirmDelete()"
+/>

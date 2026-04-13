@@ -1,5 +1,11 @@
 import { Types } from '@constants/types';
 
+export type TBackendErrors = {
+  description: string | null;
+  amount: string | null;
+  type: string | null;
+};
+
 export interface IAddBudgetTransaction {
   description: string;
   amount: number;

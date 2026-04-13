@@ -2,6 +2,7 @@
 using BudgetAppAPI.Interfaces.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using TierlistBackend.Exceptions;
 
 namespace BudgetAppAPI.Controllers
 {
@@ -73,7 +74,12 @@ namespace BudgetAppAPI.Controllers
         {
             var result = await _budgetService.DeleteTransaction(id);
 
-            return result ? NoContent() : NotFound();
+            if (!result)
+            {
+                throw new NotFoundException("Transaction not found");
+            }
+
+            return NoContent();
         }
     }
 }

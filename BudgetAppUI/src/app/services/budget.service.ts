@@ -15,7 +15,7 @@ import { Types } from '../constants/types';
 export class BudgetService {
   public httpRequest = inject(HttpClient);
   public url: string = `${environment.API_URL}`;
-  
+
   private budgetDataSubject = new BehaviorSubject<IBudgetData | null>(null);
   budgetData$ = this.budgetDataSubject.asObservable();
 
@@ -52,6 +52,28 @@ export class BudgetService {
           this.budgetDataSubject.next(updated);
         }),
       );
+  }
+
+  deleteTransaction(id: string, type: string): Observable<void> {
+    return this.httpRequest.delete<void>(`${this.url}/api/budget/${id}`).pipe(
+      tap(() => {
+        const current = this.budgetDataSubject.value;
+
+        if (!current) return;
+
+        let updated = { ...current };
+
+        if (type === Types.INCOME) {
+          updated.incomes = updated.incomes.filter((inc) => inc.id !== id);
+        } else if (type === Types.EXPENSE) {
+          updated.expenses = updated.expenses.filter((exp) => exp.id !== id);
+        }
+
+        updated = this.updateBudgetData(updated);
+
+        this.budgetDataSubject.next(updated);
+      }),
+    );
   }
 
   private updateBudgetData(budgetData: IBudgetData): IBudgetData {

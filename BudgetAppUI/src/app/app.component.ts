@@ -6,7 +6,7 @@ import { IncomesListComponent } from './components/incomes-list/incomes-list.com
 import { BudgetService } from './services/budget.service';
 import { LoadingService } from './services/loading.service';
 import { LoadingPageComponent } from './components/loading-page/loading-page.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',

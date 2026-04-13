@@ -21,7 +21,10 @@
           <p class="text-success mb-0 mx-3 fs-6">
             {{ income.amount | currency: "USD" }}
           </p>
-          <button class="btn btn-sm btn-danger d-flex">
+          <button
+            class="btn btn-sm btn-danger d-flex"
+            (click)="this.openDeleteModal(income)"
+          >
             <img
               src="circle_delete_white.svg"
               alt="Eliminar"
@@ -39,3 +42,17 @@
     </p>
   }
 </section>
+
+<swal
+  #deleteIncome
+  title="Eliminar transacción"
+  text="¿Está seguro de eliminar esta transacción?"
+  icon="warning"
+  confirmButtonText="Si"
+  confirmButtonColor="red"
+  cancelButtonText="No"
+  [showCloseButton]="true"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="this.confirmDelete()"
+/>

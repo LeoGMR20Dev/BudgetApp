@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System.Text;
 using TierlistBackend.Exceptions;
 
 namespace BudgetAppAPI.Middlewares
@@ -54,7 +55,19 @@ namespace BudgetAppAPI.Middlewares
                     errors = validationException.Errors
                         .GroupBy(e => e.PropertyName)
                         .ToDictionary(
-                            g => g.Key,
+                            g =>
+                            {
+                                StringBuilder keyBuilder = new StringBuilder();
+
+                                keyBuilder.Append(char.ToLower(g.Key[0]));
+
+                                if (g.Key.Length > 1)
+                                {
+                                    keyBuilder.Append(g.Key[1..]);
+                                }
+
+                                return keyBuilder.ToString();
+                            },
                             g => g.Select(e => e.ErrorMessage).ToArray()
                         );
                     break;

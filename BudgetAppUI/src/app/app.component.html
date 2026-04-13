@@ -1,7 +1,19 @@
 <main
-  class="bg-dark container-fluid min-vh-100 py-4 px-5 text-white d-flex flex-column justify-content-center gap-3"
+  class="bg-dark z-3 container-fluid min-vh-100 py-4 px-5 text-white d-flex flex-column gap-3"
 >
-  @if (!(isloading$ | async)) {
+  <h1 class="text-center fw-bold">{{ title }}</h1>
+
+  <budget-main-information />
+  <add-transaction />
+
+  <div class="row">
+    <incomes-list class="col" />
+    <expenses-list class="col" />
+  </div>
+
+  <loading-page [show]="isloading$ | async" />
+
+  <!-- @if (!(isloading$ | async)) {
     <h1 class="text-center fw-bold">{{ title }}</h1>
 
     <budget-main-information />
@@ -12,6 +24,6 @@
       <expenses-list class="col" />
     </div>
   } @else {
-    <loading-page />
-  }
+    <loading-page class="my-auto"/>
+  } -->
 </main>
