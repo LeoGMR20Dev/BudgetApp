@@ -13,5 +13,5 @@ This is a example project of a Budget App, where you can register incomes and ex
 1. Clone this repository on your machine
 2. Go to the project's base route with your terminal
 3. Enter these commands:
-  1. `docker compose build`
-  2. `docker compose up -d`
+   1. `docker compose build`
+   2. `docker compose up -d`
