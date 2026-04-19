@@ -1,0 +1,52 @@
+services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - MSSQL_SA_PASSWORD=sqlServerPass!123
+      - ACCEPT_EULA=Y
+    ports:
+      - '1433:1433'
+    volumes:
+      - sql_server_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P sqlServerPass!123 -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  migrator:
+    build: 
+      context: ./BudgetAppAPI
+      dockerfile: Dockerfile.migrator
+    entrypoint: ["dotnet", "ef"]
+    command: ["database", "update"]
+    environment:
+      - ConnectionStrings__DatabaseConnection=Server=sql_server;Database=BudgetAppDB;User Id=sa;Password=sqlServerPass!123;TrustServerCertificate=True
+    depends_on:
+      sql_server:
+        condition: service_healthy
+  backend:
+    build:
+      context: ./BudgetAppAPI
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+    environment:
+      - ConnectionStrings__DatabaseConnection=Server=sql_server;Database=BudgetAppDB;User Id=sa;Password=sqlServerPass!123;TrustServerCertificate=True
+      - AppSettings__Audience=http://localhost:4200
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  frontend:
+    build:
+      context: ./BudgetAppUI
+      dockerfile: Dockerfile
+    ports:
+      - '4200:80'
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+volumes:
+  sql_server_data:

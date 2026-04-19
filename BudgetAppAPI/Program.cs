@@ -22,7 +22,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BudgetContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DatabaseConnection"),
+        options => {
+            options.EnableRetryOnFailure(); 
+        });
 });
 
 builder.Services.AddScoped<IValidator<AddBudgetTransaction>, AddBudgetTransactionValidator>();

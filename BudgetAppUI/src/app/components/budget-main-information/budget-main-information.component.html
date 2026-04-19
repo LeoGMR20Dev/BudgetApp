@@ -1,5 +1,5 @@
-<section class="row border border-primary rounded-2 p-3">
-  @if (budgetData$ | async; as budget) {
+@if (budgetData$ | async; as budget) {
+  <section class="row border border-primary rounded-2 p-3">
     <div class="col-12">
       <h2 class="text-center fw-semibold">Presupuesto Disponible:</h2>
       <p class="text-center text-warning fw-bold fs-1">
@@ -22,5 +22,5 @@
         }}</span>
       </p>
     </div>
-  }
-</section>
+  </section>
+}

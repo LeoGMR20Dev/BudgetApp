@@ -36,7 +36,7 @@ namespace BudgetAppAPI.Services
             data.TotalIncomes = totalIncomes;
             data.AvailableBudget = totalIncomes - totalExpenses;
 
-            var isIncomesGreaterThanZero = totalIncomes >= 0;
+            var isIncomesGreaterThanZero = totalIncomes > 0;
 
             foreach (var exp in data.Expenses)
             {
