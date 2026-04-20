@@ -22,3 +22,7 @@ These are the options to run the project with docker:
 
 1. Copy only the docker-compose.yml file and put it in any folder
 2. Run this command: `docker compose up -build -d`
+
+Finally, enter to the frontend url and prove the app. That's all!
+
+*You will need Docker installed to run this app following these steps*
