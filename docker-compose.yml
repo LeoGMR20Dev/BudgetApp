@@ -14,6 +14,7 @@ services:
       timeout: 5s
       retries: 10
   migrator:
+    image: leogmr2020/budget_app-migrator:latest
     build: 
       context: ./BudgetAppAPI
       dockerfile: Dockerfile.migrator
@@ -25,6 +26,7 @@ services:
       sql_server:
         condition: service_healthy
   backend:
+    image: leogmr2020/budget_app-api:latest
     build:
       context: ./BudgetAppAPI
       dockerfile: Dockerfile
@@ -39,6 +41,7 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
   frontend:
+    image: leogmr2020/budget_app-frontend:latest
     build:
       context: ./BudgetAppUI
       dockerfile: Dockerfile
