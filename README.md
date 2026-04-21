@@ -5,7 +5,7 @@ This is a example project of a Budget App, where you can register incomes and ex
 ## Technologies
 
 - Backend: ASP .NET CORE, .NET 8.0
-- Frontend: AngularJS V20
+- Frontend: Angular V20
 - Database: SQL SERVER 2022
 
 # How to use it on your machine?
