@@ -22,7 +22,7 @@ namespace BudgetAppAPI.Models
         [AllowedValues(
             TransactionType.INCOME,
             TransactionType.EXPENSE,
-            ErrorMessage = $"Only '{TransactionType.INCOME}' and '{TransactionType.EXPENSE}' value are accepted"
+            ErrorMessage = $"Solo los valores '{TransactionType.INCOME}' y '{TransactionType.EXPENSE}' son aceptados"
             )]
         public string Type { get; set; } = null!;
 

@@ -80,16 +80,6 @@ namespace BudgetAppAPI.Services
             var totalBudget = totalIncomes - totalExpenses;
             var isExpense = budgetTransaction.Type == TransactionType.EXPENSE;
 
-            if (isExpense && totalBudget <= 0)
-            {
-                throw new BadHttpRequestException("You can't register a expense if you don't have any money in your budget");
-            }
-
-            if (isExpense && totalBudget < budgetTransaction.Amount)
-            {
-                throw new BadHttpRequestException("The entered amount of money can't be greater than the budget");
-            }
-
             await _budgetRepository.AddTransaction(budgetTransaction);
             await _budgetRepository.SaveAsync();
 
