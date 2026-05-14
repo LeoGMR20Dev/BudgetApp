@@ -20,6 +20,22 @@
       {{ this.backendErrors.type }}
     </p>
   </div>
+  <div class="col-auto">
+    <input
+      type="number"
+      placeholder="Valor"
+      [class.is-invalid]="isFieldInvalid('amount')"
+      class="form-control border-success bg-transparent text-white-50"
+      formControlName="amount"
+      id="amount"
+    />
+    <p class="invalid-feedback" *ngIf="isFieldInvalid('amount')">
+      {{ getErrorMessage("amount") }}
+    </p>
+    <p class="text-danger" *ngIf="this.backendErrors.amount">
+      {{ this.backendErrors.amount }}
+    </p>
+  </div>
   <div class="col">
     <input
       type="text"
@@ -35,22 +51,6 @@
     </p>
     <p class="text-danger" *ngIf="this.backendErrors.description">
       {{ this.backendErrors.description }}
-    </p>
-  </div>
-  <div class="col-auto">
-    <input
-      type="number"
-      placeholder="Valor"
-      [class.is-invalid]="isFieldInvalid('amount')"
-      class="form-control border-success bg-transparent text-white-50"
-      formControlName="amount"
-      id="amount"
-    />
-    <p class="invalid-feedback" *ngIf="isFieldInvalid('amount')">
-      {{ getErrorMessage("amount") }}
-    </p>
-    <p class="text-danger" *ngIf="this.backendErrors.amount">
-      {{ this.backendErrors.amount }}
     </p>
   </div>
   <div class="col-auto">
